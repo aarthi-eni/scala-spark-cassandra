@@ -1,0 +1,48 @@
+# scala-spark-cassandra
+package com.scala.substring
+import scala.annotation.tailrec
+/**The tail recursion is basically using the recursive function as the last statement of the function**/
+import java.util.Scanner
+object substringsearching extends App {
+    val sc = new Scanner(System.in)
+    val str = sc.next
+    val substr =  sc.next
+  sc.close()
+  def inputstrings(str: String, substr: String): Unit  = {
+    val lps = Array.fill(substr.length)(0)
+
+    /** lps-longest prefix suffix, which is an array data structure which captures the
+     * longest prefix which is also a suffix for every substring starting at index 0.  * */
+    def lpsAdd(str: String, i: Int, j: Int, lps: Array[Int]): Unit = {
+      if (j == str.length) lps
+      else if (str.charAt(i) != str.charAt(j) && i == 0) {
+        lps(j) = 0
+        lpsAdd(str, i, j + 1, lps)
+      }
+      else if (str.charAt(i) == str.charAt(j)) {
+        lps(j) = i + 1
+        lpsAdd(str, i + 1, j + 1, lps)
+      }
+      else if (str.charAt(i) != str.charAt(j) && i != 0) {
+        lpsAdd(str, i = lps(i - 1), j, lps)
+      }
+    }
+
+    lpsAdd(substr, 0, 1, lps)
+
+
+    /** Given a text str[] and a pattern substr[], write a recursive function
+     * "contains(char substr[], char str[])” that returns "yes" if substr[] is present in str[], otherwise no. * */
+    def recur(str: String, substr: String, i: Int, j: Int, lps: Array[Int]): Unit = {
+      if (i == str.length) println("NO")
+      else if (str.charAt(i) == substr.charAt(j) && j == substr.length - 1) println("YES")
+      else if (str.charAt(i) == substr.charAt(j)) recur(str, substr, i + 1, j + 1, lps)
+      else if (str.charAt(i) != substr.charAt(j) && j == 0) recur(str, substr, i + 1, j, lps)
+      else if (str.charAt(i) != substr.charAt(j) && j != 0) recur(str, substr, i, j = lps(j - 1), lps)
+    }
+
+    recur(str, substr, 0, 0, lps)
+  }
+  inputstrings(str, substr)
+}
+
