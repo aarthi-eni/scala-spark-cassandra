@@ -1,0 +1,25 @@
+import java.util.Scanner
+object Solution {
+ 
+    def main(args: Array[String]) {
+        
+    val sc = new Scanner(System.in)
+ 
+    val n = sc.next
+    val k = sc.nextInt
+ 
+    sc.close()
+ 
+    val nDigit = superOnce(n)
+    println(sumDigit((nDigit.toLong * k).toString))
+  }
+ 
+  def sumDigit(s: Seq[Char]): Int = {
+    val sum = s.foldLeft(0)((acc, c) => acc + c - '0')
+    if (sum < 10) sum else sumDigit(sum.toString)
+  }
+ 
+  def superOnce(s: Seq[Char]): Int = s.foldLeft(0)((acc, c) => acc + c - '0')
+ 
+    
+}
