@@ -1,0 +1,30 @@
+# scala-spark-cassandra
+package com.scala.fractalTree
+import java.util.Scanner
+object fractalTree extends App{
+  val sc = new Scanner(System.in)
+  val branch= sc.nextInt
+  sc.close()
+  /** repearting branch function is use to construct the tree,rec-is responsible for how many branch we want **/
+    def repeatingbranch(tree: Array[Array[Char]],rec:Int, bottom: Int, length: Int, rootLocation: Int): Array[Array[Char]] = {
+      if (rec > 0 && length>0) {
+        def builtRoot(tree: Array[Array[Char]], stem: Int, stemLen: Int, location: Int): Unit = {
+          tree(stem - stemLen+1)(location) = '1'
+          if (stemLen > 1) builtRoot(tree, stem, stemLen - 1, location)
+        }
+        def builtBranch(lBranch: Int, rBranch: Int, branchHeight: Int, branchBottom: Int): Unit = {
+          tree(branchBottom)(rBranch) = '1';tree(branchBottom)(lBranch) = '1'
+          if (branchHeight > 1) builtBranch(lBranch - 1, rBranch + 1, branchHeight - 1, branchBottom - 1)
+        }
+        builtBranch(rootLocation - 1, rootLocation + 1, length,bottom - length)
+        builtRoot(tree, bottom, length, rootLocation)
+        //this funtion call is responsible for right side of the branch
+        repeatingbranch(tree,rec - 1,bottom - (length * 2), length / 2, rootLocation +length )
+        //this function call is responsible for left side of the branch
+        repeatingbranch(tree,rec - 1,bottom - (length * 2), length / 2, rootLocation - length)
+      }
+      tree
+    }
+  /** The mkString() method is utilized to display all the elements of the Array in a string along with a separator. **/
+  print(repeatingbranch(Array.fill(63, 100)('_'),branch,62,16,49).map(_.mkString).mkString("\n"))
+}
